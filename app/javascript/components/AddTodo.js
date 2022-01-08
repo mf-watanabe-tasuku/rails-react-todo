@@ -45,6 +45,7 @@ toast.configure();
 
 function AddTodo() {
   const navigate = useNavigate();
+
   const initialTodoState = {
     id: null,
     name: '',
