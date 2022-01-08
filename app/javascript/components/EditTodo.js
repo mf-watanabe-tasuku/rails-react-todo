@@ -56,7 +56,7 @@ toast.configure();
 
 function EditTodo() {
   const navigate = useNavigate();
-  const params = useParams();
+  const { id } = useParams();
 
   const initialTodoState = {
     id: null,
@@ -73,7 +73,7 @@ function EditTodo() {
     });
   };
 
-  const getTodo = (id) => {
+  const getTodo = () => {
     axios
       .get(`/api/v1/todos/${id}`)
       .then((resp) => {
@@ -85,8 +85,8 @@ function EditTodo() {
   };
 
   useEffect(() => {
-    getTodo(params.id);
-  }, [params.id]);
+    getTodo(id);
+  }, [id]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
