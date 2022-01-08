@@ -61,8 +61,8 @@ function App() {
       </NavBar>
       <Wrapper>
         <Routes>
-          <Route exact path="/todos" element={<TodoList />} />
-          <Route exact path="/todos/new" element={<AddTodo />} />
+          <Route path="/todos" element={<TodoList />} />
+          <Route path="/todos/new" element={<AddTodo />} />
           <Route path="/todos/:id/edit" element={<EditTodo />} />
         </Routes>
       </Wrapper>
