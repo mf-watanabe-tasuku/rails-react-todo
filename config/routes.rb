@@ -11,4 +11,6 @@ Rails.application.routes.draw do
       resources :todos, only: %i[index show create update destroy]
     end
   end
+
+  get '*path', to: 'site#index'
 end
