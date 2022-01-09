@@ -32,8 +32,10 @@ const RemoveAllButton = styled.button`
   cursor: pointer;
 `
 
-const TodoName = styled.span`
+const TodoName = styled.div`
   font-size: 27px;
+  flex-grow: 1;
+  padding: 0 10px;
   ${({ is_completed }) => is_completed && `
     opacity: 0.4;
   `}
