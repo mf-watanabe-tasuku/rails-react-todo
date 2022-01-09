@@ -4,6 +4,7 @@ import axios from 'axios'
 import styled from 'styled-components'
 import { ImCheckboxChecked, ImCheckboxUnchecked} from 'react-icons/im'
 import { AiFillEdit } from 'react-icons/ai'
+import { MdOutlineWatchLater } from 'react-icons/md'
 
 const SearchAndButton = styled.div`
   display: flex;
@@ -34,11 +35,26 @@ const RemoveAllButton = styled.button`
 
 const TodoName = styled.div`
   font-size: 27px;
-  flex-grow: 1;
-  padding: 0 10px;
   ${({ is_completed }) => is_completed && `
     opacity: 0.4;
   `}
+`
+
+const TodoContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  padding: 0 20px 0 10px;
+`;
+
+const TodoDeadline = styled.div`
+  font-size: 16px;
+  color: tomato;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 3px;
+  line-height: 1;
 `
 
 const Row = styled.div`
@@ -46,7 +62,7 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 7px auto;
-  padding: 10px;
+  padding: 10px 0;
   font-size: 25px;
 `
 
@@ -85,6 +101,19 @@ function TodoList() {
     })
   }, []);
 
+  const getTodoDeadline = (date) => {
+    if (!date) return;
+
+    const deadline = new Date(date);
+    const formattedDate = [
+      deadline.getFullYear(),
+      ('0' + (deadline.getMonth() + 1)).slice(-2),
+      ('0' + (deadline.getDate())).slice(-2),
+    ].join('/');
+
+    return formattedDate;
+  };
+
   const removeAllTodos = () => {
     const sure = window.confirm('Are you sure?');
     if (sure) {
@@ -102,7 +131,8 @@ function TodoList() {
     var data = {
       id: val.id,
       name: val.name,
-      is_completed: !val.is_completed
+      is_completed: !val.is_completed,
+      deadline: val.deadline
     }
     axios.patch(`/api/v1/todos/${val.id}`, data)
     .then(resp => {
@@ -120,11 +150,11 @@ function TodoList() {
           type="text"
           placeholder='Search todo...'
           onChange={e => {
-            setSearchName(e.target.value);
-          }}/>
-          <RemoveAllButton onClick={removeAllTodos}>
-            Remove All
-          </RemoveAllButton>
+          setSearchName(e.target.value);
+        }}/>
+        <RemoveAllButton onClick={removeAllTodos}>
+          Remove All
+        </RemoveAllButton>
       </SearchAndButton>
 
       <div>
@@ -150,7 +180,14 @@ function TodoList() {
                   />
                 </UncheckedBox>
               )}
-              <TodoName is_completed={val.is_completed}>{val.name}</TodoName>
+              <TodoContent>
+                <TodoName is_completed={val.is_completed}>{val.name}</TodoName>
+                {val.deadline && (
+                  <TodoDeadline>
+                    <MdOutlineWatchLater />{getTodoDeadline(val.deadline)}
+                  </TodoDeadline>
+                )}
+              </TodoContent>
               <Link to={"/todos/" + val.id + "/edit"}>
                 <EditButton>
                   <AiFillEdit />
