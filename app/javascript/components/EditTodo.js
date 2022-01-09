@@ -5,6 +5,18 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const TodoDataCase = styled.div`
+  margin-bottom: 30px;
+`
+
+const Row = styled.div`
+  margin-bottom: 20px;
+`
+
+const LabelCase = styled.div`
+  font-size: 14px;
+`
+
 const InputForName = styled.input`
   font-size: 20px;
   width: 100%;
@@ -14,9 +26,17 @@ const InputForName = styled.input`
 `;
 
 const CurrentStatus = styled.div`
-  font-size: 19px;
   margin: 8px 0 12px;
   font-weight: bold;
+`;
+
+const InputForDeadline = styled.input`
+  cursor: pointer;
+  max-width: 300px;
+  font-size: 16px;
+  height: 40px;
+  padding: 2px 7px;
+  margin: 12px 0;
 `;
 
 const IsCompletedButton = styled.button`
@@ -30,7 +50,7 @@ const IsCompletedButton = styled.button`
   cursor: pointer;
 `;
 
-const EditButton = styled.button`
+const UpdateButton = styled.button`
   color: #fff;
   font-size: 17px;
   font-weight: 500;
@@ -39,6 +59,7 @@ const EditButton = styled.button`
   background: #0ac620;
   border-radius: 3px;
   border: none;
+  cursor: pointer;
 `;
 
 const DeleteButton = styled.button`
@@ -62,6 +83,7 @@ function EditTodo() {
     id: null,
     name: "",
     is_completed: false,
+    deadline: ""
   };
 
   const [currentTodo, setCurrentTodo] = useState(initialTodoState);
@@ -98,6 +120,7 @@ function EditTodo() {
       id: val.id,
       name: val.name,
       is_completed: !val.is_completed,
+      deadline: val.deadline
     };
 
     axios
@@ -137,43 +160,58 @@ function EditTodo() {
     <>
       <h1>Editing Todo</h1>
       <div>
-        <div>
-          <label htmlFor="name">Current Name</label>
-          <InputForName
-            type="text"
-            id="name"
-            name="name"
-            value={currentTodo.name}
-            onChange={handleInputChange}
-          />
-          <div>
-            <span>CurrentStatus</span>
-            <br />
+        <TodoDataCase>
+          <Row>
+            <LabelCase>
+              <label htmlFor="name">Current Name</label>
+            </LabelCase>
+            <InputForName
+              type="text"
+              id="name"
+              name="name"
+              value={currentTodo.name}
+              onChange={handleInputChange}
+            />
+          </Row>
+          <Row>
+            <LabelCase>
+              <span>CurrentStatus</span>
+            </LabelCase>
             <CurrentStatus>
               {currentTodo.is_completed ? "Completed" : "UnCompleted"}
             </CurrentStatus>
-          </div>
-        </div>
+          </Row>
+          <Row>
+            <LabelCase>
+              <label htmlFor="deadline">Deadline</label>
+            </LabelCase>
+            <InputForDeadline
+              type="date"
+              id="deadline"
+              name="deadline"
+              value={currentTodo.deadline}
+              onChange={handleInputChange}
+            />
+          </Row>
+        </TodoDataCase>
 
         {currentTodo.is_completed ? (
           <IsCompletedButton
-            className="badge badge-primary mr-2"
             onClick={() => updateIsCompleted(currentTodo)}
           >
             UnCompleted
           </IsCompletedButton>
         ) : (
           <IsCompletedButton
-            className="badge badge-primary mr-2"
             onClick={() => updateIsCompleted(currentTodo)}
           >
             Completed
           </IsCompletedButton>
         )}
-        <EditButton type="submit" onClick={updateTodo}>
+        <UpdateButton type="submit" onClick={updateTodo}>
           Update
-        </EditButton>
-        <DeleteButton className="badge badge-danger mr-2" onClick={deleteTodo}>
+        </UpdateButton>
+        <DeleteButton onClick={deleteTodo}>
           Delete
         </DeleteButton>
       </div>
