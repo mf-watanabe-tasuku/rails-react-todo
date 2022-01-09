@@ -1,6 +1,7 @@
 SAMPLE_TODOS = [
   {
-    name: 'Going around the world'
+    name: 'Going around the world',
+    deadline: Date.tomorrow
   },
   {
     name: 'graduating from college'
