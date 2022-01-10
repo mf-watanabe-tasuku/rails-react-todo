@@ -5,6 +5,7 @@ import AddTodo from './AddTodo'
 import TodoList from './TodoList'
 import EditTodo from './EditTodo'
 import ErrorPage from './ErrorPage'
+import TagList from './TagList'
 import './App.css'
 
 const NavBar = styled.nav`
@@ -58,6 +59,9 @@ function App() {
           <NavItem>
             <Link to="/todos/new">Add New Todo</Link>
           </NavItem>
+          <NavItem>
+            <Link to="/tags">Tags</Link>
+          </NavItem>
         </NavItems>
       </NavBar>
       <Wrapper>
@@ -65,6 +69,7 @@ function App() {
           <Route path="/todos" element={<TodoList />} />
           <Route path="/todos/new" element={<AddTodo />} />
           <Route path="/todos/:id/edit" element={<EditTodo />} />
+          <Route path="/tags" element={<TagList />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Wrapper>
