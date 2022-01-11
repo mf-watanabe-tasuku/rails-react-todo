@@ -80,7 +80,7 @@ function EditTag() {
   }
 
   useEffect(() => {
-    getTag(id);
+    getTag();
   }, [id]);
 
   const handleInputChange = (event) => {
