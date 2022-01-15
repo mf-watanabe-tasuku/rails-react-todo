@@ -1,7 +1,7 @@
 class Api::V1::TodosController < ApplicationController
   def index
-    todos = Todo.order(updated_at: :desc)
-    render json: todos
+    todos = Todo.includes(:tags).order(updated_at: :desc)
+    render json: todos.to_json(:include => :tags)
   end
 
   def show
@@ -46,6 +46,6 @@ class Api::V1::TodosController < ApplicationController
   private
 
   def todo_params
-    params.require(:todo).permit(:name, :is_completed, :deadline)
+    params.require(:todo).permit(:name, :is_completed, :deadline, { tag_ids: [] })
   end
 end
