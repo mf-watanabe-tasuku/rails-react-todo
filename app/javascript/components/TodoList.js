@@ -184,9 +184,11 @@ function TodoList() {
                 <TodoName is_completed={val.is_completed}>{val.name}</TodoName>
                 {val.deadline && (
                   <TodoDeadline>
-                    <MdOutlineWatchLater />{getTodoDeadline(val.deadline)}
+                    <MdOutlineWatchLater />
+                    {getTodoDeadline(val.deadline)}
                   </TodoDeadline>
                 )}
+                {val.tags.length > 0 && val.tags.map(tag => tag.name)}
               </TodoContent>
               <Link to={"/todos/" + val.id + "/edit"}>
                 <EditButton>

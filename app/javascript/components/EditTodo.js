@@ -39,6 +39,21 @@ const InputForDeadline = styled.input`
   margin: 12px 0;
 `;
 
+const SelectForTag = styled.select`
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  height: 40px;
+  padding: 2px 7px;
+  margin: 12px 0;
+`;
+
+const OptionForTag = styled.option`
+
+`
+
 const IsCompletedButton = styled.button`
   color: #fff;
   font-weight: 500;
@@ -83,10 +98,12 @@ function EditTodo() {
     id: null,
     name: "",
     is_completed: false,
-    deadline: ""
+    deadline: "",
+    tag_id: "",
   };
 
   const [currentTodo, setCurrentTodo] = useState(initialTodoState);
+  const [tags, setTags] = useState([]);
 
   const notify = () => {
     toast.success("Todo successfully update!", {
@@ -106,8 +123,20 @@ function EditTodo() {
       });
   };
 
+  const getTags = () => {
+    axios
+      .get(`/api/v1/tags/`)
+      .then(resp => {
+        setTags(resp.data);
+      })
+      .catch(e => {
+        console.log(e);
+      })
+  }
+
   useEffect(() => {
     getTodo(id);
+    getTags();
   }, [id]);
 
   const handleInputChange = (event) => {
@@ -120,7 +149,7 @@ function EditTodo() {
       id: val.id,
       name: val.name,
       is_completed: !val.is_completed,
-      deadline: val.deadline
+      deadline: val.deadline,
     };
 
     axios
@@ -130,8 +159,21 @@ function EditTodo() {
   };
 
   const updateTodo = () => {
+    const tag_list = [];
+    if (currentTodo.tag_id) {
+      tag_list.push(currentTodo.tag_id);
+    }
+
     axios
-      .patch(`/api/v1/todos/${currentTodo.id}`, currentTodo)
+      .patch(`/api/v1/todos/${currentTodo.id}`, {
+        todo: {
+          id: currentTodo.id,
+          name: currentTodo.name,
+          is_completed: currentTodo.is_completed,
+          deadline: currentTodo.deadline,
+          tag_ids: tag_list,
+        },
+      })
       .then((resp) => {
         notify();
         navigate("/todos");
@@ -193,27 +235,36 @@ function EditTodo() {
               onChange={handleInputChange}
             />
           </Row>
+          <Row>
+            <LabelCase>
+              <label htmlFor="tag">tag</label>
+            </LabelCase>
+            <SelectForTag type="select" id="tag" name="tag_id" onChange={handleInputChange}>
+              <OptionForTag>----</OptionForTag>
+              {tags.map((tag, i) => {
+                return (
+                  <OptionForTag key={i} value={tag.id}>
+                    {tag.name}
+                  </OptionForTag>
+                );
+              })}
+            </SelectForTag>
+          </Row>
         </TodoDataCase>
 
         {currentTodo.is_completed ? (
-          <IsCompletedButton
-            onClick={() => updateIsCompleted(currentTodo)}
-          >
+          <IsCompletedButton onClick={() => updateIsCompleted(currentTodo)}>
             UnCompleted
           </IsCompletedButton>
         ) : (
-          <IsCompletedButton
-            onClick={() => updateIsCompleted(currentTodo)}
-          >
+          <IsCompletedButton onClick={() => updateIsCompleted(currentTodo)}>
             Completed
           </IsCompletedButton>
         )}
         <UpdateButton type="submit" onClick={updateTodo}>
           Update
         </UpdateButton>
-        <DeleteButton onClick={deleteTodo}>
-          Delete
-        </DeleteButton>
+        <DeleteButton onClick={deleteTodo}>Delete</DeleteButton>
       </div>
     </>
   );
