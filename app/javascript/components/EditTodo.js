@@ -99,7 +99,7 @@ function EditTodo() {
     name: "",
     is_completed: false,
     deadline: "",
-    tag_id: "",
+    tags: [],
   };
 
   const [currentTodo, setCurrentTodo] = useState(initialTodoState);
@@ -159,11 +159,6 @@ function EditTodo() {
   };
 
   const updateTodo = () => {
-    const tag_list = [];
-    if (currentTodo.tag_id) {
-      tag_list.push(currentTodo.tag_id);
-    }
-
     axios
       .patch(`/api/v1/todos/${currentTodo.id}`, {
         todo: {
@@ -171,7 +166,7 @@ function EditTodo() {
           name: currentTodo.name,
           is_completed: currentTodo.is_completed,
           deadline: currentTodo.deadline,
-          tag_ids: tag_list,
+          tag_ids: currentTodo.tags,
         },
       })
       .then((resp) => {
@@ -239,7 +234,13 @@ function EditTodo() {
             <LabelCase>
               <label htmlFor="tag">tag</label>
             </LabelCase>
-            <SelectForTag type="select" id="tag" name="tag_id" onChange={handleInputChange}>
+            <SelectForTag
+              type="select"
+              id="tag"
+              name="tag_id"
+              value={currentTodo.tags.length > 0 && currentTodo.tags[0].id}
+              onChange={handleInputChange}
+            >
               <OptionForTag>----</OptionForTag>
               {tags.map((tag, i) => {
                 return (

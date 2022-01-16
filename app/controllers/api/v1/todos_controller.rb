@@ -6,7 +6,7 @@ class Api::V1::TodosController < ApplicationController
 
   def show
     todo = Todo.find(params[:id])
-    render json: todo
+    render json: todo.to_json(:include => :tags)
   end
 
   def create
